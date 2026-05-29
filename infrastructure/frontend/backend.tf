@@ -10,7 +10,7 @@ terraform {
     key     = "frontend/terraform.tfstate"
     region  = "eu-west-1"
     encrypt = true
-    profile = "terraform-sessions"
+    # profile = "terraform-sessions"
 
   }
 }
