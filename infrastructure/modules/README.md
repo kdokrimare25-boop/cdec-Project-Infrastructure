@@ -23,7 +23,7 @@ module "eks"  →  ../modules/eks   (uses vpc outputs)
 | Module | Responsibility | Used by |
 |--------|----------------|---------|
 | [cloudfront](cloudfront/) | S3 bucket + CloudFront CDN for static SPA | frontend |
-| [route53](route53/) | DNS zones and records | frontend |
+| [route53](route53/) | Hosted zone + DNS records | frontend |
 | [vpc](vpc/) | VPC, subnets, NAT | backend |
 | [eks](eks/) | EKS cluster and node group | backend |
 

@@ -9,6 +9,5 @@ application = "cdec-alpha-frontend"
 # cloudfront_aliases  = ["www.example.com"]
 # acm_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/..."
 
-create_dns_zone = false
-route53_zone_id = "Z1234567890ABC"
+dns_zone_name   = "example.com"
 dns_record_name = "www.example.com"

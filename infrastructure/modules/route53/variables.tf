@@ -1,29 +1,45 @@
-variable "create_zone" {
-  description = "If true, creates a new Route 53 hosted zone. If false, provide zone_id for an existing zone."
-  type        = bool
-  default     = false
+variable "application" {
+  description = "Application identifier used in tags."
+  type        = string
+}
+
+variable "environment" {
+  description = "Environment name used in tags."
+  type        = string
+}
+
+variable "name_prefix" {
+  description = "Override for resource name prefix in comments/tags. Defaults to {application}-{environment}."
+  type        = string
+  default     = null
 }
 
 variable "zone_name" {
-  description = "DNS zone name with trailing dot optional (e.g. example.com). Required when create_zone is true."
+  description = "DNS zone name to create (e.g. example.com). Required when zone_id is not set."
   type        = string
-  default     = null
 
   validation {
-    condition     = !var.create_zone || (var.zone_name != null && var.zone_name != "")
-    error_message = "zone_name is required when create_zone is true."
+    condition     = var.zone_id != null || (var.zone_name != null && var.zone_name != "")
+    error_message = "zone_name is required when zone_id is not set (module creates a new hosted zone)."
   }
 }
 
 variable "zone_id" {
-  description = "Existing hosted zone ID. Required when create_zone is false and records are managed."
+  description = "Existing hosted zone ID. When set, the module does not create a zone and uses this ID for records."
   type        = string
   default     = null
+}
 
-  validation {
-    condition     = var.create_zone || var.zone_id != null || length(var.records) == 0
-    error_message = "zone_id is required when create_zone is false and records are defined."
-  }
+variable "force_destroy" {
+  description = "Allow Terraform to delete the hosted zone even when it contains records."
+  type        = bool
+  default     = false
+}
+
+variable "comment" {
+  description = "Comment on the hosted zone when the module creates it."
+  type        = string
+  default     = null
 }
 
 variable "records" {
@@ -46,7 +62,7 @@ variable "records" {
 }
 
 variable "tags" {
-  description = "Tags applied to the hosted zone when create_zone is true."
+  description = "Additional tags applied to the hosted zone when created."
   type        = map(string)
   default     = {}
 }

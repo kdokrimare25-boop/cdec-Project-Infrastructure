@@ -40,6 +40,12 @@ module "cloudfront" { source = "../modules/cloudfront" }  # S3 + CloudFront
 module "route53"   { source = "../modules/route53" }
 ```
 
+## DNS
+
+Set `dns_zone_name` in `terraform.tfvars` to create a Route 53 hosted zone. After apply, delegate your domain at the registrar using the `route53_name_servers` output.
+
+To use an existing zone instead, set `route53_zone_id` and keep `dns_zone_name` for reference.
+
 ## Deploy the application
 
 After `terraform apply`:

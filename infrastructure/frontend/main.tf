@@ -22,9 +22,12 @@ module "cloudfront" {
 module "route53" {
   source = "../modules/route53"
 
-  create_zone = var.create_dns_zone
+  application = var.application
+  environment = var.environment
+
   zone_name   = var.dns_zone_name
   zone_id     = var.route53_zone_id
+  force_destroy = var.dns_zone_force_destroy
 
   records = var.dns_record_name != "" ? [
     {

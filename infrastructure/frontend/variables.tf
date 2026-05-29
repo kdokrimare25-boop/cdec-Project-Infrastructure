@@ -52,22 +52,21 @@ variable "acm_certificate_arn" {
   default     = null
 }
 
-variable "create_dns_zone" {
-  description = "If true, creates a Route 53 hosted zone. If false, set route53_zone_id."
-  type        = bool
-  default     = false
-}
-
 variable "dns_zone_name" {
-  description = "Zone name when create_dns_zone is true, e.g. example.com."
+  description = "Route 53 zone name to create (e.g. example.com). Required unless route53_zone_id is set."
   type        = string
-  default     = null
 }
 
 variable "route53_zone_id" {
-  description = "Existing hosted zone ID when create_dns_zone is false."
+  description = "Existing hosted zone ID. When set, the module does not create a zone."
   type        = string
   default     = null
+}
+
+variable "dns_zone_force_destroy" {
+  description = "Allow Terraform to delete the hosted zone when it contains records."
+  type        = bool
+  default     = false
 }
 
 variable "dns_record_name" {
