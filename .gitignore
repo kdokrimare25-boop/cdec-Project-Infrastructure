@@ -53,7 +53,7 @@ override.tf.json
 *_override.tf.json
 
 # Real config — copy from committed .example / .sample files
-**/terraform.tfvars
+#**/terraform.tfvars
 **/*.auto.tfvars
 **/*.auto.tfvars.json
 **/backend.hcl
