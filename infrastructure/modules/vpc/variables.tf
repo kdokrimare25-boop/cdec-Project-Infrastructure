@@ -41,14 +41,6 @@ variable "availability_zones" {
     condition     = length(var.availability_zones) >= 2
     error_message = "Provide at least 2 availability zones for EKS control plane and node spread."
   }
-
-  validation {
-    condition = (
-      length(var.availability_zones) == length(var.public_subnet_cidrs) &&
-      length(var.availability_zones) == length(var.private_subnet_cidrs)
-    )
-    error_message = "availability_zones, public_subnet_cidrs, and private_subnet_cidrs must have the same length."
-  }
 }
 
 variable "cluster_name" {

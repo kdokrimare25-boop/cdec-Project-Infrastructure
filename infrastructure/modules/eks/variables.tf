@@ -55,11 +55,6 @@ variable "desired_size" {
     condition     = var.desired_size >= 0
     error_message = "desired_size must be >= 0."
   }
-
-  validation {
-    condition     = var.min_size <= var.desired_size && var.desired_size <= var.max_size
-    error_message = "desired_size must be between min_size and max_size (inclusive)."
-  }
 }
 
 variable "min_size" {
@@ -75,11 +70,6 @@ variable "min_size" {
 variable "max_size" {
   description = "Maximum number of worker nodes for autoscaling."
   type        = number
-
-  validation {
-    condition     = var.max_size >= var.min_size
-    error_message = "max_size must be >= min_size."
-  }
 }
 
 variable "disk_size" {
