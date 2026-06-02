@@ -8,8 +8,7 @@ terraform {
   backend "s3" {
     bucket  = "cdec-alpha-terraform-state"
     key     = "backend/terraform.tfstate"
-    region  = "us-east-1"
-    encrypt = true
+    region  = "eu-west-1"
 
   }
 }

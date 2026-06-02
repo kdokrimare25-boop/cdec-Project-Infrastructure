@@ -2,25 +2,33 @@
 // Requires: terraform, aws-backend-terraform credentials, terraform.tfvars and backend.hcl in TF_DIR
 
 pipeline {
-    agent any
+    agent {
+        label 'terraform'
+    }
 
     environment {
         TF_DIR = 'infrastructure/backend'
-        AWS_DEFAULT_REGION = 'us-east-1'
+        AWS_DEFAULT_REGION = 'eu-west-1'
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                checkout scm
+                git url: 'https://github.com/atulyw/cdec-alpha-app.git', branch: 'main'
             }
         }
 
         stage('Terraform Init') {
             steps {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-backend-terraform',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
                 dir(env.TF_DIR) {
-                    sh 'terraform init -input=false -backend-config=backend.hcl'
+                    sh 'terraform init -input=false'
                 }
             }
         }
