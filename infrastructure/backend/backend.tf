@@ -9,6 +9,7 @@ terraform {
     bucket  = "cdec-alpha-terraform-state"
     key     = "backend/terraform.tfstate"
     region  = "eu-west-1"
+    #profile = "terraform-sessions"
 
   }
 }

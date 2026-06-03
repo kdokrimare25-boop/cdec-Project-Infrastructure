@@ -14,7 +14,7 @@ availability_zones   = ["eu-west-1a", "eu-west-1b"]
 single_nat_gateway = true
 
 # EKS
-kubernetes_version = "1.34"
+kubernetes_version  = "1.34"
 node_instance_types = ["c7i-flex.large"]
 desired_size        = 2
 min_size            = 1
