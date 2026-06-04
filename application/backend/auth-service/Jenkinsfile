@@ -11,7 +11,7 @@ pipeline {
     }
     
     environment {
-        EKS_CLUSTER = 'cdec-eks'
+        EKS_CLUSTER = 'cdec-eks-dev'
         EKS_REGION = 'eu-west-1'
     }
 
