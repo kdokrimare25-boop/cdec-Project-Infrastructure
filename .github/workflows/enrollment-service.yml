@@ -1,6 +1,7 @@
 # enrollment-service — build, test, push to ECR, deploy to EKS
 #
-# GitHub repository secrets:
+# GitHub repository secrets — add under Settings → Secrets and variables → Actions
+# (NOT the "Agents" tab; Actions workflows cannot read Agents secrets)
 #   AWS_ACCESS_KEY_ID
 #   AWS_SECRET_ACCESS_KEY
 #   MONGO_URI

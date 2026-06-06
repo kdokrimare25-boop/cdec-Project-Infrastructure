@@ -1,0 +1,105 @@
+// Backend ingress — route /api/auth, /api/courses, /api/enroll to EKS services
+//
+// Jenkins agent needs: AWS CLI, kubectl
+// AWS credential: aws-frontend-terraform (eks:DescribeCluster for update-kubeconfig)
+// EKS access: IAM principal in infrastructure/backend terraform.tfvars cluster_admin_iam_role_names
+//
+// Prerequisite: NGINX Ingress Controller installed on cdec-eks-dev
+//   kubectl get ingressclass nginx
+
+pipeline {
+    agent {
+        label 'kubectl'
+    }
+
+    parameters {
+        choice(
+            name: 'ACTION',
+            choices: ['create', 'delete'],
+            description: 'create: apply backend ingress. delete: remove backend ingress from the cluster.'
+        )
+        string(
+            name: 'INGRESS_HOST',
+            defaultValue: 'api.thecloudnine.in',
+            description: 'Hostname for the ingress rule (DNS must point to the ingress load balancer)'
+        )
+    }
+
+    environment {
+        EKS_CLUSTER = 'cdec-eks-dev'
+        EKS_REGION = 'eu-west-1'
+        K8S_DIR = 'application/backend/k8s'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/atulyw/cdec-alpha-app.git', branch: 'main'
+            }
+        }
+
+        stage('Apply Ingress') {
+            when {
+                expression { params.ACTION == 'create' }
+            }
+            steps {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-frontend-terraform',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    dir(env.K8S_DIR) {
+                        sh """
+                            export AWS_DEFAULT_REGION=${env.EKS_REGION}
+                            aws eks update-kubeconfig --region ${env.EKS_REGION} --name ${env.EKS_CLUSTER}
+
+                            sed "s|__INGRESS_HOST__|${params.INGRESS_HOST}|g" ingress.yml > ingress.generated.yml
+                            kubectl apply -f ingress.generated.yml -n default
+                            kubectl get ingress backend-ingress -n default
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Delete Ingress') {
+            when {
+                expression { params.ACTION == 'delete' }
+            }
+            steps {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-frontend-terraform',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    dir(env.K8S_DIR) {
+                        sh """
+                            export AWS_DEFAULT_REGION=${env.EKS_REGION}
+                            aws eks update-kubeconfig --region ${env.EKS_REGION} --name ${env.EKS_CLUSTER}
+
+                            kubectl delete ingress backend-ingress -n default --ignore-not-found
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                if (params.ACTION == 'create') {
+                    echo "Backend ingress applied for host ${params.INGRESS_HOST}"
+                } else {
+                    echo 'Backend ingress deleted.'
+                }
+            }
+        }
+        failure {
+            echo 'Backend ingress pipeline failed. Check the stage logs above.'
+        }
+    }
+}
