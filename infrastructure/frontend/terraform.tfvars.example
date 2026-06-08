@@ -7,8 +7,9 @@ application = "cdec-frontend"
 # bucket_name = "my-unique-frontend-bucket"
 # force_destroy = true
 
+# Optional override; when omitted, dns_record_name is used as the CloudFront alias.
 # cloudfront_aliases  = ["www.example.com"]
-# acm_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/..."
+# acm_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/..."  # must be us-east-1
 
 # Route 53 — creates a hosted zone by default; omit route53_zone_id to create new
 # Do not use example.com / example.net / example.org (reserved by AWS)

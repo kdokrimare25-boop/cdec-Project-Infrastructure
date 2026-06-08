@@ -41,7 +41,7 @@ variable "enable_spa_routing" {
 }
 
 variable "cloudfront_aliases" {
-  description = "Custom domain names for the distribution. Leave empty to use the default cloudfront.net hostname."
+  description = "Custom domain names for the distribution. When empty, dns_record_name is used as the alias if set."
   type        = list(string)
   default     = []
 }
