@@ -1,26 +1,3 @@
-data "http" "controller_crds" {
-  count = var.install_controller ? 1 : 0
-
-  url = "https://raw.githubusercontent.com/aws/eks-charts/master/stable/aws-load-balancer-controller/crds/crds.yaml"
-}
-
-locals {
-  controller_crds = var.install_controller ? [
-    for document in split("---\n", trimspace(data.http.controller_crds[0].response_body)) :
-    yamldecode(document)
-    if trimspace(document) != "" && can(yamldecode(document))
-  ] : []
-}
-
-resource "kubernetes_manifest" "controller_crds" {
-  for_each = var.install_controller ? {
-    for manifest in local.controller_crds :
-    "${manifest.kind}/${manifest.metadata.name}" => manifest
-  } : {}
-
-  manifest = each.value
-}
-
 resource "kubernetes_namespace_v1" "ingress" {
   count = var.create_ingress ? 1 : 0
 
@@ -79,13 +56,12 @@ resource "helm_release" "aws_load_balancer_controller" {
     },
     {
       name  = "crds.create"
-      value = "false"
+      value = "true"
     },
   ]
 
   depends_on = [
     aws_iam_role_policy_attachment.load_balancer_controller,
     kubernetes_service_account_v1.load_balancer_controller,
-    kubernetes_manifest.controller_crds,
   ]
 }
