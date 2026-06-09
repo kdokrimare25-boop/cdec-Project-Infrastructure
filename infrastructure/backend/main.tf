@@ -1,5 +1,12 @@
 # Backend stack — VPC first, then EKS (uses VPC outputs)
 
+check "alb_ingress_inputs" {
+  assert {
+    condition     = !var.enable_alb_ingress || (var.ingress_host != "" && var.acm_certificate_arn != "")
+    error_message = "ingress_host and acm_certificate_arn are required when enable_alb_ingress is true."
+  }
+}
+
 module "vpc" {
   source = "../modules/vpc"
 
@@ -47,4 +54,27 @@ module "eks" {
   include_caller_as_cluster_admin = var.include_caller_as_cluster_admin
 
   depends_on = [module.vpc]
+}
+
+module "alb_ingress" {
+  source = "../modules/alb-ingress"
+  count  = var.enable_alb_ingress ? 1 : 0
+
+  cluster_name      = module.eks.cluster_name
+  vpc_id            = module.vpc.vpc_id
+  aws_region        = var.aws_region
+  environment       = var.environment
+  project_name      = var.project_name
+  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_provider_url = module.eks.oidc_provider_url
+
+  ingress_host          = var.ingress_host
+  acm_certificate_arn   = var.acm_certificate_arn
+  load_balancer_name    = var.alb_name
+  allowed_inbound_cidrs = var.alb_allowed_inbound_cidrs
+  ingress_paths         = var.ingress_paths
+
+  additional_tags = var.additional_tags
+
+  depends_on = [module.eks]
 }

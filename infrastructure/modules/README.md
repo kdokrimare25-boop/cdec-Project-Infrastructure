@@ -14,8 +14,9 @@ module "route53"    →  ../modules/route53
 **Backend** (`../backend/main.tf`)
 
 ```text
-module "vpc"  →  ../modules/vpc
-module "eks"  →  ../modules/eks   (uses vpc outputs)
+module "vpc"         →  ../modules/vpc
+module "eks"         →  ../modules/eks        (uses vpc outputs)
+module "alb_ingress" →  ../modules/alb-ingress (uses eks outputs)
 ```
 
 ## Modules
@@ -26,6 +27,7 @@ module "eks"  →  ../modules/eks   (uses vpc outputs)
 | [route53](route53/) | Hosted zone + DNS records | frontend |
 | [vpc](vpc/) | VPC, subnets, NAT | backend |
 | [eks](eks/) | EKS cluster and node group | backend |
+| [alb-ingress](alb-ingress/) | ALB controller (IRSA + Helm), ALB security group, API ingress | backend |
 
 ## Adding a module
 

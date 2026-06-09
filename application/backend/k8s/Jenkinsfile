@@ -23,6 +23,11 @@ pipeline {
             defaultValue: 'api.thecloudnine.in',
             description: 'Hostname for the ingress rule (DNS must point to the ingress load balancer)'
         )
+        string(
+            name: 'SECURITY_GROUP_ID',
+            defaultValue: 'sg-xxxxxxxx',
+            description: 'Security group ID attached to the ALB (must allow inbound 80/443)'
+        )
     }
 
     environment {
@@ -58,7 +63,9 @@ pipeline {
 
                             kubectl create namespace ${KUBE_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
-                            sed "s|__INGRESS_HOST__|${params.INGRESS_HOST}|g" ingress.yml > ingress.generated.yml
+                            sed -e "s|__INGRESS_HOST__|${params.INGRESS_HOST}|g" \\
+                                -e "s|__SECURITY_GROUP_ID__|${params.SECURITY_GROUP_ID}|g" \\
+                                ingress.yml > ingress.generated.yml
                             kubectl apply -f ingress.generated.yml -n ${KUBE_NAMESPACE}
                             kubectl get ingress cloudblitz-api-ingress -n ${KUBE_NAMESPACE}
                         """

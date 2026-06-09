@@ -38,3 +38,9 @@ include_caller_as_cluster_admin = true
 additional_tags = {
   Owner = "platform-team"
 }
+
+# ALB Ingress — requires EKS cluster to exist first; re-run apply if k8s resources fail on first bootstrap
+enable_alb_ingress  = true
+ingress_host        = "api.your-domain.com"
+acm_certificate_arn = "arn:aws:acm:eu-west-1:ACCOUNT_ID:certificate/CERT_ID"
+alb_name            = "cdec-alpha-alb"

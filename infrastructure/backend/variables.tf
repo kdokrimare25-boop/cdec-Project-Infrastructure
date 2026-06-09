@@ -136,3 +136,61 @@ variable "include_caller_as_cluster_admin" {
   type        = bool
   default     = true
 }
+
+# ALB Ingress module
+
+variable "enable_alb_ingress" {
+  description = "Install AWS Load Balancer Controller and create the API ingress."
+  type        = bool
+  default     = true
+}
+
+variable "ingress_host" {
+  description = "Hostname for the backend API ingress (e.g. api.example.com)."
+  type        = string
+  default     = ""
+}
+
+variable "acm_certificate_arn" {
+  description = "ACM certificate ARN in the same region as EKS for the ALB HTTPS listener."
+  type        = string
+  default     = ""
+}
+
+variable "alb_name" {
+  description = "Fixed name for the internet-facing ALB."
+  type        = string
+  default     = "cdec-alpha-alb"
+}
+
+variable "alb_allowed_inbound_cidrs" {
+  description = "CIDR blocks allowed to reach the ALB on ports 80 and 443."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
+variable "ingress_paths" {
+  description = "Ingress path rules for backend services."
+  type = list(object({
+    path         = string
+    service_name = string
+    service_port = number
+  }))
+  default = [
+    {
+      path         = "/api/auth"
+      service_name = "auth-service"
+      service_port = 8081
+    },
+    {
+      path         = "/api/courses"
+      service_name = "course-service"
+      service_port = 8082
+    },
+    {
+      path         = "/api/enroll"
+      service_name = "enrollment-service"
+      service_port = 8083
+    },
+  ]
+}
