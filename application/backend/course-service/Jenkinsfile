@@ -9,7 +9,7 @@
 
 pipeline {
     agent {
-        label 'kubectl'
+        label 'terraform'
     }
     
     environment {
