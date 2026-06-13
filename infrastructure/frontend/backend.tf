@@ -6,7 +6,7 @@
 
 terraform {
   backend "s3" {
-    bucket  = "cdec-alpha-terraform-state-kaminid"
+    bucket  = "cdec-alpha-terraform-state-kaminid/frontend/"
     key     = "frontend/terraform.tfstate"
     region  = "eu-north-1"
     encrypt = true
