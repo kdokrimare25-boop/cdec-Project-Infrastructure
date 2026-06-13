@@ -13,6 +13,6 @@ application = "cdec-frontend"
 
 # Route 53 — creates a hosted zone by default; omit route53_zone_id to create new
 # Do not use example.com / example.net / example.org (reserved by AWS)
-dns_zone_name   = "awsproject.shop"
-dns_record_name = "www.awsproject.shop"
+dns_zone_name   = "your-domain.com"
+dns_record_name = "www.your-domain.com"
 # route53_zone_id = "Z1234567890ABC"  # use only for an existing zone
