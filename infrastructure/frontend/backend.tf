@@ -7,7 +7,7 @@
 terraform {
   backend "s3" {
     bucket  = "cdec-alpha-terraform-state-kaminid"
-    key     = "frontend/terraform.tfstate"
+    key     = "frontend-t/terraform.tfstate"
     region  = "eu-north-1"
     encrypt = true
     # profile = "terraform-sessions"
