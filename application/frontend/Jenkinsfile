@@ -19,36 +19,36 @@ pipeline {
         )
         string(
             name: 'CLOUDFRONT_DISTRIBUTION_ID',
-            defaultValue: 'E2T929LQJJ7AIS',
+            defaultValue: 'E10VMEGHCBEL2R', 
             description: 'CloudFront distribution ID (e.g. E1234567890ABC)'
         )
         string(
             name: 'VITE_AUTH_API',
-            defaultValue: 'https://api.thecloudnine.in/api/auth',
+            defaultValue: 'https://api.awsproject.shop/api/auth',  
             description: 'Auth API URL baked into the build'
         )
         string(
             name: 'VITE_COURSE_API',
-            defaultValue: 'https://api.thecloudnine.in/api/courses',
+            defaultValue: 'https://api.awsproject.shop/api/courses',
             description: 'Course API URL baked into the build'
         )
         string(
             name: 'VITE_ENROLL_API',
-            defaultValue: 'https://api.thecloudnine.in/api/enroll',
+            defaultValue: 'https://api.awsproject.shop/api/enroll',
             description: 'Enrollment API URL baked into the build'
         )
     }
 
     environment {
         APP_DIR = 'application/frontend'
-        AWS_DEFAULT_REGION = 'eu-west-1'
+        AWS_DEFAULT_REGION = 'eu-north-1'
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/atulyw/cdec-alpha-app.git', branch: 'main'
+                git url: 'https://github.com/kdokrimare25-boop/cedec-Project-Infrastructure.git', branch: 'main'
             }
         }
 
