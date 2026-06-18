@@ -13,7 +13,7 @@ pipeline {
     }
     
     environment {
-        EKS_CLUSTER = 'cdec-eks-dev'
+        EKS_CLUSTER = 'jenkins-ecs-cluster'
         EKS_REGION = 'eu-north-1'
     }
 

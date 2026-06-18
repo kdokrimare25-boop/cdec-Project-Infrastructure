@@ -13,15 +13,15 @@ pipeline {
     }
     
     environment {
-        EKS_CLUSTER = 'cdec-eks-dev'
-        EKS_REGION = 'eu-west-1'
+        EKS_CLUSTER = 'jenkins-ecs-cluster'
+        EKS_REGION = 'eu-north-1'
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/atulyw/cdec-alpha-app.git', branch: 'main'
+                git url: 'https://github.com/kdokrimare25-boop/cdec-Project-Infrastructure.git', branch: 'main'
             }
         }
 
@@ -32,7 +32,7 @@ pipeline {
             steps {
                 dir('application/backend/course-service') {
                     sh '''
-                        docker build -t 933516006319.dkr.ecr.eu-west-1.amazonaws.com/backend/course-service:latest .
+                        docker build -t 329504364887.dkr.ecr.eu-north-1.amazonaws.com/backend/course-service:latest .
                     '''
                 }
             }
@@ -50,10 +50,10 @@ pipeline {
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
                     sh '''
-                        export AWS_DEFAULT_REGION=eu-west-1
-                        aws ecr get-login-password --region eu-west-1 | \
-                            docker login --username AWS --password-stdin 933516006319.dkr.ecr.eu-west-1.amazonaws.com
-                        docker push 933516006319.dkr.ecr.eu-west-1.amazonaws.com/backend/course-service:latest
+                        export AWS_DEFAULT_REGION=eu-north-1
+                        aws ecr get-login-password --region eu-north-1 | \
+                            docker login --username AWS --password-stdin 329504364887.dkr.ecr.eu-north-1.amazonaws.com
+                        docker push 329504364887.dkr.ecr.eu-north-1.amazonaws.com/backend/course-service:latest
                     '''
                 }
             }
